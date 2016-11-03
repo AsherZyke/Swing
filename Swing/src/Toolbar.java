@@ -19,6 +19,7 @@ public class Toolbar extends JPanel {
                 textListener.textEmitted("Hello\n");
             }
         });
+        
         goodbyeButton.addActionListener(a -> {
             if (textListener != null) {
                 textListener.textEmitted("Goodbye\n");
@@ -35,6 +36,4 @@ public class Toolbar extends JPanel {
     public void setStringListener(StringListener listener) {
         this.textListener = listener;
     }
-
-
 }

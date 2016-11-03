@@ -23,12 +23,13 @@ public class MainFrame extends JFrame {
         //parameter that is passed to it.
         toolbar.setStringListener(s -> textPanel.appendText(s));
         
-        formPanel.setFormListener(e -> {  
+        formPanel.setFormListener(e -> {
             String name = e.getName();
             String occupation = e.getOccupation();
             int ageCat = e.getAgeCategory();
+            String empCat = e.getEmploymentCategory();
             
-            textPanel.appendText(name + ": " + occupation + ": " + ageCat + "\n");
+            textPanel.appendText(name + ": " + occupation + ": " + ageCat + ": " + empCat + "\n");
         });
         
         add(toolbar, BorderLayout.NORTH);
@@ -39,6 +40,4 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
-
-
 }
