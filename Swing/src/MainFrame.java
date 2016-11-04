@@ -1,6 +1,9 @@
 import java.awt.BorderLayout;
-import javax.swing.JButton;
+
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 
 @SuppressWarnings("serial")
@@ -18,6 +21,8 @@ public class MainFrame extends JFrame {
         toolbar = new Toolbar();
         textPanel = new TextPanel();
         formPanel = new FormPanel();
+        
+        setJMenuBar(createMenuBar());
         
         //Tells this particular stringListener what to do with
         //parameter that is passed to it.
@@ -39,5 +44,31 @@ public class MainFrame extends JFrame {
         setSize(500, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+    
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem exportDataItem = new JMenuItem("Export Data...");
+        JMenuItem importDataItem = new JMenuItem("Import Data...");
+        JMenuItem exitItem = new JMenuItem("Exit");
+        
+        fileMenu.add(exportDataItem);
+        fileMenu.add(importDataItem);
+        fileMenu.addSeparator();
+        fileMenu.add(exitItem);
+        
+        JMenu windowMenu = new JMenu("Window");
+        
+        JMenu showMenu = new JMenu("Show");
+        JMenuItem showFormItem = new JMenuItem("Person Form");
+        showMenu.add(showFormItem);
+        windowMenu.add(showMenu);
+        
+        menuBar.add(fileMenu);
+        menuBar.add(windowMenu);
+        
+        return menuBar;
     }
 }
