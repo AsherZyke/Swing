@@ -2,6 +2,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -66,6 +67,12 @@ public class FormPanel extends JPanel {
         maleRadio = new JRadioButton("male");
         femaleRadio = new JRadioButton("female");
         genderGroup = new ButtonGroup();
+        
+        //Setup mneumonics
+        okBtn.setMnemonic(KeyEvent.VK_O);
+        
+        nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
+        nameLabel.setLabelFor(nameField);
 
         ageList.setPreferredSize(new Dimension(110, 75));
         ageList.setBorder(BorderFactory.createEtchedBorder());
