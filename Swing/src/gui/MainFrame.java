@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
+import controller.Controller;
+
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
@@ -20,6 +22,7 @@ public class MainFrame extends JFrame {
 	private TextPanel textPanel;
 	private FormPanel formPanel;
 	private JFileChooser fileChooser;
+	private Controller controller;
 
 	public MainFrame() {
 		super("Hello World");
@@ -30,6 +33,7 @@ public class MainFrame extends JFrame {
 		textPanel = new TextPanel();
 		formPanel = new FormPanel();
 		fileChooser = new JFileChooser();
+		controller = new Controller();
 		
 		fileChooser.addChoosableFileFilter(new PersonFileFilter());
 
@@ -40,12 +44,7 @@ public class MainFrame extends JFrame {
 		toolbar.setStringListener(s -> textPanel.appendText(s));
 
 		formPanel.setFormListener(e -> {
-			String name = e.getName();
-			String occupation = e.getOccupation();
-			int ageCat = e.getAgeCategory();
-			String empCat = e.getEmploymentCategory();
-
-			textPanel.appendText(name + ": " + occupation + ": " + ageCat + ": " + empCat + "\n");
+			controller.addPerson(e);
 		});
 
 		add(toolbar, BorderLayout.NORTH);
