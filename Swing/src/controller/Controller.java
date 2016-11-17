@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import gui.FormEvent;
 import model.AgeCategory;
 import model.Database;
@@ -9,6 +11,10 @@ import model.Person;
 
 public class Controller {
 	Database db = new Database();
+	
+	public List<Person> getPeople() {
+		return db.getPeople();
+	}
 	
 	
 	public void addPerson(FormEvent ev) {
