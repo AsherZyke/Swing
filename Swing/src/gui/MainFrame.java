@@ -1,8 +1,10 @@
 package gui;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
@@ -36,9 +38,9 @@ public class MainFrame extends JFrame {
 		tablePanel = new TablePanel();
 		fileChooser = new JFileChooser();
 		controller = new Controller();
-		
+
 		tablePanel.setData(controller.getPeople());
-		
+
 		fileChooser.addChoosableFileFilter(new PersonFileFilter());
 
 		setJMenuBar(createMenuBar());
@@ -95,26 +97,37 @@ public class MainFrame extends JFrame {
 		exitItem.setMnemonic(KeyEvent.VK_X);
 
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
-		
+
 		importDataItem.addActionListener(a -> {
-			if(fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-				System.out.println(fileChooser.getSelectedFile());
+			if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+				try {
+					controller.loadFromFile(fileChooser.getSelectedFile());
+					tablePanel.refresh();
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(MainFrame.this, "Could not load data from file.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
-		
+
 		exportDataItem.addActionListener(a -> {
-			if(fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-				System.out.println(fileChooser.getSelectedFile());
+			if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+				try {
+					controller.saveToFile(fileChooser.getSelectedFile());
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(MainFrame.this, "Could not save data to file.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 
 		exitItem.addActionListener(a -> {
-			int action = JOptionPane.showConfirmDialog(MainFrame.this, "Do you really want to exit the application?", "Confirm Exit",
-					JOptionPane.OK_CANCEL_OPTION);
-			if(action == JOptionPane.OK_OPTION) {
+			int action = JOptionPane.showConfirmDialog(MainFrame.this, "Do you really want to exit the application?",
+					"Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
+			if (action == JOptionPane.OK_OPTION) {
 				System.exit(0);
 			}
-			
+
 		});
 
 		return menuBar;
