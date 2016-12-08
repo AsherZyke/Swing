@@ -38,9 +38,9 @@ public class PersonTableModel extends AbstractTableModel {
 		case 1:
 			return person.getName();
 		case 2:
-			person.getOccupation();
+			return person.getOccupation();
 		case 3:
-			person.getAgeCategory();
+			return person.getAgeCategory();
 		case 4:
 			return person.getEmpCat();
 		case 5:

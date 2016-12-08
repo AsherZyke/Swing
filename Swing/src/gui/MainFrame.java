@@ -1,4 +1,5 @@
 package gui;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -18,105 +19,142 @@ import controller.Controller;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 
-	private Toolbar toolbar;
-	private TextPanel textPanel;
-	private FormPanel formPanel;
-	private JFileChooser fileChooser;
-	private Controller controller;
-	private TablePanel tablePanel;
+    // commented out code related to the toolbar because it is currently
+    // unnecessary
+    // private Toolbar toolbar;
+    private TextPanel textPanel;
+    private FormPanel formPanel;
+    private JFileChooser fileChooser;
+    private Controller controller;
+    private TablePanel tablePanel;
+    private PrefsDialog prefsDialog;
 
-	public MainFrame() {
-		super("Hello World");
+    public MainFrame() {
+        super("Employment Info");
 
-		setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 
-		toolbar = new Toolbar();
-		textPanel = new TextPanel();
-		formPanel = new FormPanel();
-		tablePanel = new TablePanel();
-		fileChooser = new JFileChooser();
-		controller = new Controller();
-		
-		tablePanel.setData(controller.getPeople());
-		
-		fileChooser.addChoosableFileFilter(new PersonFileFilter());
+        // toolbar = new Toolbar();
+        textPanel = new TextPanel();
+        formPanel = new FormPanel();
+        tablePanel = new TablePanel();
+        fileChooser = new JFileChooser();
+        controller = new Controller();
+        prefsDialog = new PrefsDialog(this);
 
-		setJMenuBar(createMenuBar());
+        tablePanel.setData(controller.getPeople());
 
-		// Tells this particular stringListener what to do with
-		// parameter that is passed to it.
-		toolbar.setStringListener(s -> textPanel.appendText(s));
+        fileChooser.addChoosableFileFilter(new PersonFileFilter());
 
-		formPanel.setFormListener(e -> {
-			controller.addPerson(e);
-			tablePanel.refresh();
-		});
+        setJMenuBar(createMenuBar());
 
-		add(toolbar, BorderLayout.NORTH);
-		add(tablePanel, BorderLayout.CENTER);
-		add(formPanel, BorderLayout.WEST);
+        // Tells this particular stringListener what to do with
+        // parameter that is passed to it.
+        // toolbar.setStringListener(s -> textPanel.appendText(s));
+        
+        tablePanel.setPersonTableListener(row -> {
+                controller.removePerson(row);
+        });
 
-		setMinimumSize(new Dimension(500, 400));
-		setSize(500, 500);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setVisible(true);
-	}
+        formPanel.setFormListener(e -> {
+            controller.addPerson(e);
+            tablePanel.refresh();
+        });
 
-	private JMenuBar createMenuBar() {
-		JMenuBar menuBar = new JMenuBar();
+        // add(toolbar, BorderLayout.NORTH);
+        add(tablePanel, BorderLayout.CENTER);
+        add(formPanel, BorderLayout.WEST);
 
-		JMenu fileMenu = new JMenu("File");
-		JMenuItem exportDataItem = new JMenuItem("Export Data...");
-		JMenuItem importDataItem = new JMenuItem("Import Data...");
-		JMenuItem exitItem = new JMenuItem("Exit");
+        setMinimumSize(new Dimension(900, 400));
+        setSize(500, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
 
-		fileMenu.add(exportDataItem);
-		fileMenu.add(importDataItem);
-		fileMenu.addSeparator();
-		fileMenu.add(exitItem);
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
 
-		JMenu windowMenu = new JMenu("Window");
-		JMenu showMenu = new JMenu("Show");
-		JCheckBoxMenuItem showFormItem = new JCheckBoxMenuItem("Person Form");
-		showFormItem.setSelected(true);
-		showMenu.add(showFormItem);
-		windowMenu.add(showMenu);
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem exportDataItem = new JMenuItem("Export Data...");
+        JMenuItem importDataItem = new JMenuItem("Import Data...");
+        JMenuItem exitItem = new JMenuItem("Exit");
 
-		menuBar.add(fileMenu);
-		menuBar.add(windowMenu);
+        fileMenu.add(exportDataItem);
+        fileMenu.add(importDataItem);
+        fileMenu.addSeparator();
+        fileMenu.add(exitItem);
 
-		showFormItem.addActionListener(a -> {
-			JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) a.getSource();
+        JMenu windowMenu = new JMenu("Window");
+        JMenu showMenu = new JMenu("Show");
+        JMenuItem prefsItem = new JMenuItem("Preferences...");
+        
+        JCheckBoxMenuItem showFormItem = new JCheckBoxMenuItem("Person Form");
+        showFormItem.setSelected(true);
+        showMenu.add(showFormItem);
+        windowMenu.add(showMenu);
+        windowMenu.add(prefsItem);
 
-			formPanel.setVisible(menuItem.isSelected());
-		});
+        menuBar.add(fileMenu);
+        menuBar.add(windowMenu);
+        
+        prefsItem.addActionListener(al -> {
+            prefsDialog.setVisible(true);
+        });
 
-		fileMenu.setMnemonic(KeyEvent.VK_F);
-		exitItem.setMnemonic(KeyEvent.VK_X);
+        showFormItem.addActionListener(a -> {
+            JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) a.getSource();
 
-		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
-		
-		importDataItem.addActionListener(a -> {
-			if(fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-				System.out.println(fileChooser.getSelectedFile());
-			}
-		});
-		
-		exportDataItem.addActionListener(a -> {
-			if(fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
-				System.out.println(fileChooser.getSelectedFile());
-			}
-		});
+            formPanel.setVisible(menuItem.isSelected());
+        });
 
-		exitItem.addActionListener(a -> {
-			int action = JOptionPane.showConfirmDialog(MainFrame.this, "Do you really want to exit the application?", "Confirm Exit",
-					JOptionPane.OK_CANCEL_OPTION);
-			if(action == JOptionPane.OK_OPTION) {
-				System.exit(0);
-			}
-			
-		});
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        exitItem.setMnemonic(KeyEvent.VK_X);
 
-		return menuBar;
-	}
+        exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
+                ActionEvent.CTRL_MASK));
+        
+        importDataItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
+                ActionEvent.CTRL_MASK));
+
+        importDataItem
+                .addActionListener(a -> {
+                    if (fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            controller.loadFromFile(fileChooser
+                                    .getSelectedFile());
+                            tablePanel.refresh();
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(MainFrame.this,
+                                    "Could not load data from file.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
+
+        exportDataItem
+                .addActionListener(a -> {
+                    if (fileChooser.showSaveDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            controller.saveToFile(fileChooser
+                                    .getSelectedFile());
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(MainFrame.this,
+                                    "Could not save data to file.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
+
+        exitItem.addActionListener(a -> {
+            int action = JOptionPane.showConfirmDialog(MainFrame.this,
+                    "Do you really want to exit the application?",
+                    "Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
+            if (action == JOptionPane.OK_OPTION) {
+                System.exit(0);
+            }
+
+        });
+
+        return menuBar;
+    }
 }

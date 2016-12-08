@@ -1,7 +1,14 @@
 package model;
 
-public class Person {
-	private static int count = 0;
+import java.io.Serializable;
+
+public class Person implements Serializable {
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -2566745671938885455L;
+
+    private static int count = 0;
 	
 	private int id;
 	private String name;
@@ -19,9 +26,13 @@ public class Person {
     	this.occupation = occupation;
     	this.ageCategory = ageCategory;
     	this.empCat = empCat;
-    	this.taxID = taxID;
     	this.usCitizen = usCitizen;
     	this.gender = gender;
+    	if(usCitizen) {
+    	    this.taxID = taxID;
+    	} else {
+    	    this.taxID = null;
+    	}
     	
     	this.id = count;
     	count++;
@@ -43,7 +54,6 @@ public class Person {
 		return occupation;
 	}
 	public void setOccupation(String occupation) {
-		this.occupation = occupation;
 	}
 	public AgeCategory getAgeCategory() {
 		return ageCategory;

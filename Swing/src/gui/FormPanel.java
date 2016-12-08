@@ -125,7 +125,7 @@ public class FormPanel extends JPanel {
             FormEvent ev = new FormEvent(this, name, occupation,
                     ageCat.getID(), empCat, taxID, usCitizen, genderCommand);
 
-            System.out.println(empCat);
+            //System.out.println(empCat);
 
             if (formListener != null) {
                 formListener.formEventOccurred(ev);
